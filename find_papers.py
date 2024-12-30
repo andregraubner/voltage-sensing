@@ -36,7 +36,7 @@ def search_papers(keyword, batch_size=100, max_results=None):
             }
             
             # Make API request with appropriate delay to respect rate limits
-            time.sleep(1)  # Rate limiting: 1 second between requests
+            time.sleep(10)  # Rate limiting: 1 second between requests
             response = requests.get(base_url, params=params)
             response.raise_for_status()
             search_data = response.json()
@@ -78,4 +78,4 @@ def process_papers(keyword, max_results=None):
 
 # Example usage
 if __name__ == "__main__":
-    papers = process_papers("is voltage dependent", max_results=300)
+    papers = process_papers("is voltage dependent", max_results=1000)
