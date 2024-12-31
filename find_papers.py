@@ -2,7 +2,7 @@ import requests
 import time
 from urllib.parse import quote_plus
 
-def search_papers(keyword, batch_size=100, max_results=None):
+def search_papers(batch_size=100, max_results=None):
     """
     Search for papers containing the keyword in title or abstract.
     
@@ -28,11 +28,11 @@ def search_papers(keyword, batch_size=100, max_results=None):
             
             # URL encode the keyword and create query parameters
             params = {
-                'query': keyword,
+                'query': 'voltage + protein + "electrophysiology"',
                 'limit': current_limit,
                 'offset': total_fetched,
-                'fields': 'title,abstract,year,authors,url,citationCount,fieldsOfStudy',
-                'fieldsOfStudy': 'Biology'
+                'fields': 'title,abstract,url',
+                #'fieldsOfStudy': 'Biology'
             }
             
             # Make API request with appropriate delay to respect rate limits
@@ -63,19 +63,17 @@ def search_papers(keyword, batch_size=100, max_results=None):
         print(f"Error searching papers: {e}")
         return
 
-def process_papers(keyword, max_results=None):
+def process_papers(save_path, max_results=None):
     """
     Download paper data and write to file
     """
-    
-    print(f"Searching for papers about '{keyword}':")
 
-    for batch in search_papers(keyword, max_results=max_results):
+    for batch in search_papers(max_results=max_results):
         
-        with open("papers.txt", "a") as f:
+        with open(save_path, "a") as f:
             papers = [f"{paper.get('title')}\n" for paper in batch]
             f.writelines(papers)
 
 # Example usage
 if __name__ == "__main__":
-    papers = process_papers("is voltage dependent", max_results=1000)
+    papers = process_papers("mutagenesis.txt", max_results=1000)
